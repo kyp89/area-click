@@ -1,0 +1,13 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "member-access": true, //Wymusza stosowanie public, private, protected
+        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"], //Wymusza określanie typów
+        "no-console": false //"no-console": [true, "log", "error"] - pozwala na używanie lub nie conoli
+    },
+    "rulesDirectory": []
+}

@@ -1,0 +1,1 @@
+export { AreaClick } from "./area-click";
