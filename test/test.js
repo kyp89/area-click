@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const marked_point_1 = require("./../src/models/marked-point");
 const src_1 = require("./../src");
 const src_2 = require("common-models/src");
 const jquery_1 = __importDefault(require("jquery"));
@@ -45,20 +46,23 @@ jquery_1.default(document).ready(() => {
                     if (typeof reader.result === `string`) {
                         const value = reader.result.split(',')[1];
                         decodedValue = atob(value);
-                        infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
+                        //infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
                         console.log(decodedValue);
                         const image = new Image();
                         image.src = `data:image/jpg;base64,${value}`;
-                        document.body.appendChild(image);
+                        // document.body.appendChild(image);
                         areaClick.imgHref = image.src;
-                        // const srcAttr = document.createAttribute("src");
-                        // srcAttr.value = value;
-                        //imgBox.setAttributeNode(image.src);
                     }
                 };
             }
         });
     }
+    const markedPoints = new Array();
+    for (let i = 1; i < 11; i++) {
+        const mp = new marked_point_1.MarkedPoint(`mp${i}`, new src_2.Point(i * 20, i * 25), {});
+        markedPoints.push(mp);
+    }
+    areaClick.markedPoints = markedPoints;
     console.log(`Size:`);
     console.log(size);
     console.log(`Style Parameter:`);

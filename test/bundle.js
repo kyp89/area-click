@@ -49,9 +49,10 @@
 	    return (mod && mod.__esModule) ? mod : { "default": mod };
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
+	const marked_point_1 = __webpack_require__(36);
 	const src_1 = __webpack_require__(1);
-	const src_2 = __webpack_require__(35);
-	const jquery_1 = __importDefault(__webpack_require__(39));
+	const src_2 = __webpack_require__(37);
+	const jquery_1 = __importDefault(__webpack_require__(41));
 	jquery_1.default(document).ready(() => {
 	    const testContainer = document.getElementById("#testContainer");
 	    const parameters = new Array();
@@ -91,20 +92,23 @@
 	                    if (typeof reader.result === `string`) {
 	                        const value = reader.result.split(',')[1];
 	                        decodedValue = atob(value);
-	                        infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
+	                        //infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
 	                        console.log(decodedValue);
 	                        const image = new Image();
 	                        image.src = `data:image/jpg;base64,${value}`;
-	                        document.body.appendChild(image);
+	                        // document.body.appendChild(image);
 	                        areaClick.imgHref = image.src;
-	                        // const srcAttr = document.createAttribute("src");
-	                        // srcAttr.value = value;
-	                        //imgBox.setAttributeNode(image.src);
 	                    }
 	                };
 	            }
 	        });
 	    }
+	    const markedPoints = new Array();
+	    for (let i = 1; i < 11; i++) {
+	        const mp = new marked_point_1.MarkedPoint(`mp${i}`, new src_2.Point(i * 20, i * 25), {});
+	        markedPoints.push(mp);
+	    }
+	    areaClick.markedPoints = markedPoints;
 	    console.log(`Size:`);
 	    console.log(size);
 	    console.log(`Style Parameter:`);
@@ -117,9 +121,13 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
 	Object.defineProperty(exports, "__esModule", { value: true });
 	var area_click_1 = __webpack_require__(2);
 	exports.AreaClick = area_click_1.AreaClick;
+	__export(__webpack_require__(35));
 
 
 /***/ }),
@@ -142,11 +150,19 @@
 	        this._size = _size;
 	        this._parameters = _parameters;
 	        this._imgHref = "";
+	        this._imageContainer = null;
 	        this._clickCallback = null;
+	        this._markedPoints = new Array();
+	        this._markedPointsContainer = null;
+	        this._markedPointClickCallback = null;
 	        this._svgElement = d3.select(this._htmlElement).append("svg")
 	            .attr("width", `${this._size.width}`)
 	            .attr("height", `${this._size.height}`)
 	            .style("border", "1px solid black");
+	        this._imageContainer = this._svgElement.append("g")
+	            .attr("name", "imageContainer");
+	        this._markedPointsContainer = this._svgElement.append("g")
+	            .attr("name", "markedPoints");
 	    }
 	    set clickCallback(clickCallback) {
 	        this._clickCallback = clickCallback;
@@ -155,9 +171,12 @@
 	        this._imgHref = imgHref;
 	        this.createImgElement();
 	    }
+	    set markedPoints(markedPoints) {
+	        this._markedPoints = markedPoints;
+	        this.createMarkedPoints();
+	    }
 	    createImgElement() {
-	        //this.clear();
-	        this._imageElement = this._svgElement
+	        this._imageElement = this._imageContainer
 	            .append("svg:image")
 	            .attr("xlink:href", `${this._imgHref}`)
 	            .attr("x", "0")
@@ -177,6 +196,29 @@
 	            this._svgElement.selectAll("svg:image").remove();
 	        }
 	        ;
+	    }
+	    createMarkedPoints() {
+	        if (this._markedPoints.length > 0) {
+	            this._markedPoints.forEach((markedPoint) => {
+	                const pointContainer = this._markedPointsContainer.append("g")
+	                    .attr("name", `${markedPoint.id}`);
+	                const lineStyle = `stroke:red;stroke-width:2;`;
+	                pointContainer.append("line")
+	                    .attr("x1", `${markedPoint.point.x - 10}`)
+	                    .attr("y1", `${markedPoint.point.y - 10}`)
+	                    .attr("x2", `${markedPoint.point.x + 10}`)
+	                    .attr("y2", `${markedPoint.point.y + 10}`)
+	                    .attr("stroke-width", 2)
+	                    .attr("stroke", "red");
+	                pointContainer.append("line")
+	                    .attr("x1", `${markedPoint.point.x + 10}`)
+	                    .attr("y1", `${markedPoint.point.y - 10}`)
+	                    .attr("x2", `${markedPoint.point.x - 10}`)
+	                    .attr("y2", `${markedPoint.point.y + 10}`)
+	                    .attr("stroke-width", 2)
+	                    .attr("stroke", "red");
+	            });
+	        }
 	    }
 	}
 	exports.AreaClick = AreaClick;
@@ -19426,16 +19468,42 @@
 
 	"use strict";
 	Object.defineProperty(exports, "__esModule", { value: true });
-	var point_1 = __webpack_require__(36);
-	exports.Point = point_1.Point;
-	var size_1 = __webpack_require__(37);
-	exports.Size = size_1.Size;
-	var style_parameter_1 = __webpack_require__(38);
-	exports.StyleParameter = style_parameter_1.StyleParameter;
+	var marked_point_1 = __webpack_require__(36);
+	exports.MarkedPoint = marked_point_1.MarkedPoint;
 
 
 /***/ }),
 /* 36 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	class MarkedPoint {
+	    constructor(id, point, data) {
+	        this.id = id;
+	        this.point = point;
+	        this.data = data;
+	    }
+	}
+	exports.MarkedPoint = MarkedPoint;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var point_1 = __webpack_require__(38);
+	exports.Point = point_1.Point;
+	var size_1 = __webpack_require__(39);
+	exports.Size = size_1.Size;
+	var style_parameter_1 = __webpack_require__(40);
+	exports.StyleParameter = style_parameter_1.StyleParameter;
+
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -19451,7 +19519,7 @@
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -19467,7 +19535,7 @@
 
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -19483,7 +19551,7 @@
 
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!

@@ -7,7 +7,15 @@
     "rules": {
         "member-access": true, //Wymusza stosowanie public, private, protected
         "typedef": [true, "call-signature", "parameter", "member-variable-declaration"], //Wymusza określanie typów
-        "no-console": false //"no-console": [true, "log", "error"] - pozwala na używanie lub nie conoli
-    },
+        "no-console": false, //"no-console": [true, "log", "error"] - pozwala na używanie lub nie conoli
+        "variable-name": {
+            "options": [
+              "ban-keywords",
+              "check-format",
+              "allow-leading-underscore",
+              "allow-pascal-case"
+            ]
+          }
+    },  
     "rulesDirectory": []
 }

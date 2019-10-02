@@ -1,5 +1,6 @@
+import { MarkedPoint } from './../src/models/marked-point';
 import {AreaClick} from "./../src";
-import { Size, StyleParameter} from "common-models/src";
+import { Size, StyleParameter, Point} from "common-models/src";
 import $ from "jquery";
 
 
@@ -60,18 +61,14 @@ $(document).ready(() => {
                     if(typeof reader.result === `string`){
                         const value = reader.result.split(',')[1];
                         decodedValue = atob(value);
-                        infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
+                        //infoBoxImbCode.innerHTML = `IMG Code: ${decodedValue}`;
                         console.log(decodedValue);
 
-                        const image = new Image();
-                        image.src = `data:image/jpg;base64,${value}`;
-                        document.body.appendChild(image);
+                         const image = new Image();
+                         image.src = `data:image/jpg;base64,${value}`;
+                        // document.body.appendChild(image);
 
-                        areaClick.imgHref = image.src;
-                        // const srcAttr = document.createAttribute("src");
-                        // srcAttr.value = value;
-
-                         //imgBox.setAttributeNode(image.src);
+                         areaClick.imgHref = image.src;
                     }
                 }
 
@@ -79,6 +76,16 @@ $(document).ready(() => {
         });
     }
     
+
+    const markedPoints: Array<MarkedPoint> = new Array<MarkedPoint>();
+
+    for(let i=1; i<11; i++){
+        const mp = new MarkedPoint(`mp${i}`,new Point(i*20,i*25),{});
+
+        markedPoints.push(mp);
+    }
+
+    areaClick.markedPoints = markedPoints;
 
     console.log(`Size:`);
     console.log(size);
